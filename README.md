@@ -20,6 +20,11 @@ Export your textures in .tga format with correct suffixes in a file names ("BM",
 ## Enable the BG3-DDS-Exporter under the Python menu
 First time running the plugin it will ask you what folder the Texconv.exe is located in via a UI pop-up. This will create a BG3-DDS-Exporter-PluginSettings.ini in the plugin folder with the settings saved.
 
+## Export preset:
+Move the BaldursGate3_Props.spexp and BaldursGate3_Skin.spexp to this folder:
+
+C:\Users\username\Documents\Adobe\Adobe Substance 3D Painter\assets\export-presets
+
 # Dependencies:
 Microsoft Texconv (Download and extract to whatever folder you want)
 
