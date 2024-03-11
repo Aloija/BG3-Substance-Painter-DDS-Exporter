@@ -20,7 +20,7 @@ def config_ini(overwrite):
 
     # Define the path to the StarfieldPluginSettings.ini file
     ini_file_path = os.path.join(script_dir, "BG3-DDS-Exporter-PluginSettings.ini")
-    
+
     # Create a ConfigParser object
     config = configparser.ConfigParser()
 
@@ -28,7 +28,7 @@ def config_ini(overwrite):
     if os.path.exists(ini_file_path):
         # Read the INI file
         config.read(ini_file_path)
-        
+
         # Check if the section and key exist
         if 'General' in config and 'TexConvDirectory' in config['General']:
             # Check if the value is empty
@@ -64,16 +64,15 @@ def config_ini(overwrite):
 
 def choose_texconv_folder():
     path = QtWidgets.QFileDialog.getExistingDirectory(
-    substance_painter.ui.get_main_window(),"Choose Texconv directory")
-    return path +"/texconv.exe"
+        substance_painter.ui.get_main_window(), "Choose Texconv directory")
+    return path + "/texconv.exe"
 
 
 def convert_png_to_dds(texconvPath, sourceTGA, overwrite):
     # Replace backslashes with forward slashes in the provided paths
     texconvPath = texconvPath.replace('\\', '/')
     sourceFolder = os.path.dirname(sourceTGA)
-    sourceFolder = sourceFolder.replace('\\', '/')
-    outputFolder = sourceFolder + "/DDS/"
+    outputFolder = sourceFolder.replace('\\', '/')
 
     isExist = os.path.exists(outputFolder)
     if not isExist:
@@ -90,7 +89,7 @@ def convert_png_to_dds(texconvPath, sourceTGA, overwrite):
 
         outputFile = sourceFile + ".DDS"
 
-        if suffix in ["BM", "NM", "HMVY", "CLEA"]:
+        if suffix in ["BM", "NM", "HMVY", "CLEA", "MSKA"]:
             format_option = "BC3_UNORM"
         elif suffix in ["PM", "MSK", "GM"]:
             format_option = "BC1_UNORM"
@@ -121,15 +120,25 @@ def convert_png_to_dds(texconvPath, sourceTGA, overwrite):
                 print(f"Failed to convert {filename}")
 
             convert_to_DDS(outputFolder)
+            delete_tga(outputFolder)
 
 
-def convert_to_DDS(path):
-
-    export_folder = Path(path)
+def convert_to_DDS(folder):
+    export_folder = Path(folder)
 
     for file in export_folder.iterdir():
         path = Path(file)
-        path.rename(path.with_suffix('.DDS'))
+        if path.name[-3:] == "dds":
+            path.rename(path.with_suffix('.DDS'))
+
+            
+def delete_tga(folder):
+    export_folder = Path(folder)
+
+    for file in export_folder.iterdir():
+        path = Path(file)
+        if path.name[-3:] == "tga":
+            path.unlink()
 
 
 class BG3DDSPlugin:
@@ -198,13 +207,13 @@ class BG3DDSPlugin:
     def button_clear_clicked(self):
         self.log.clear()
 
-    def checkbox_export_change(self,state):
+    def checkbox_export_change(self, state):
         if state == Qt.Checked:
             self.export = True
         else:
             self.export = False
 
-    def checkbox_overwrite_change(self,state):
+    def checkbox_overwrite_change(self, state):
         if state == Qt.Checked:
             self.overwrite = True
         else:
@@ -216,18 +225,18 @@ class BG3DDSPlugin:
         substance_painter.ui.delete_ui_element(self.window)
 
     def on_export_finished(self, res):
-        if(self.export):
+        if (self.export):
             self.log.append(res.message)
             self.log.append("Exported files:")
             for file_list in res.textures.values():
                 for file_path in file_list:
                     self.log.append("  {}".format(file_path))
-                    
+
             self.log.append("Converting to DDS files:")
             for file_list in res.textures.values():
                 for file_path in file_list:
-                    convert_png_to_dds(self.TexConvPath,file_path,self.overwrite)
-                    file_path = file_path[:-3]+"DDS"
+                    convert_png_to_dds(self.TexConvPath, file_path, self.overwrite)
+                    file_path = file_path[:-3] + "DDS"
                     self.log.append("  {}".format(file_path))
 
     def on_export_error(self, err):
@@ -240,16 +249,17 @@ BG3_DDS_PLUGIN = None
 
 def start_plugin():
     """This method is called when the plugin is started."""
-    print ("BG3 DDS Exporter Plugin Initialized")
+    print("BG3 DDS Exporter Plugin Initialized")
     global BG3_DDS_PLUGIN
     BG3_DDS_PLUGIN = BG3DDSPlugin()
 
 
 def close_plugin():
     """This method is called when the plugin is stopped."""
-    print ("BG3 DDS Exporter Plugin Shutdown")
+    print("BG3 DDS Exporter Plugin Shutdown")
     global BG3_DDS_PLUGIN
     del BG3_DDS_PLUGIN
+
 
 if __name__ == "__main__":
     start_plugin()
