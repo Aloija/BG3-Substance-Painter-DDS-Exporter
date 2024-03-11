@@ -11,6 +11,8 @@ import substance_painter.event
 import os
 import configparser
 import subprocess
+from pathlib import Path
+
 
 def config_ini(overwrite):
     # Get the path to the script's directory
@@ -59,10 +61,12 @@ def config_ini(overwrite):
 
     return TexConvPath
 
+
 def choose_texconv_folder():
     path = QtWidgets.QFileDialog.getExistingDirectory(
     substance_painter.ui.get_main_window(),"Choose Texconv directory")
     return path +"/texconv.exe"
+
 
 def convert_png_to_dds(texconvPath, sourcePNG, overwrite):
     # Replace backslashes with forward slashes in the provided paths
@@ -115,6 +119,18 @@ def convert_png_to_dds(texconvPath, sourcePNG, overwrite):
                 print(f"Successfully converted {filename} to {outputFile}")
             except subprocess.CalledProcessError:
                 print(f"Failed to convert {filename}")
+
+            convert_to_DDS(outputFolder)
+
+
+def convert_to_DDS(path):
+
+    export_folder = Path(path)
+
+    for file in export_folder.iterdir():
+        path = Path(file)
+        path.rename(path.with_suffix('.DDS'))
+
 
 class BG3DDSPlugin:
     def __init__(self):
@@ -218,13 +234,16 @@ class BG3DDSPlugin:
         self.log.append("Export failed.")
         self.log.append(repr(err))
 
+
 BG3_DDS_PLUGIN = None
+
 
 def start_plugin():
     """This method is called when the plugin is started."""
     print ("BG3 DDS Exporter Plugin Initialized")
     global BG3_DDS_PLUGIN
     BG3_DDS_PLUGIN = BG3DDSPlugin()
+
 
 def close_plugin():
     """This method is called when the plugin is stopped."""
