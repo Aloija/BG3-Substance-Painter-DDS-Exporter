@@ -128,7 +128,6 @@ def convert_to_DDS(file):
 
 def delete_tga(file):
     path = Path(file)
-    path = Path(file)
     if path.name[-3:] == "tga":
         path.unlink()
 
