@@ -116,7 +116,7 @@ def convert_png_to_dds(texconvPath, sourcePNG, overwrite):
             except subprocess.CalledProcessError:
                 print(f"Failed to convert {filename}")
 
-class StarfieldDDSPlugin:
+class BG3DDSPlugin:
     def __init__(self):
         # Export boolean whether to add DDS creation or not
         self.export = True
@@ -224,7 +224,7 @@ def start_plugin():
     """This method is called when the plugin is started."""
     print ("BG3 DDS Exporter Plugin Initialized")
     global BG3_DDS_PLUGIN
-    BG3_DDS_PLUGIN = StarfieldDDSPlugin()
+    BG3_DDS_PLUGIN = BG3DDSPlugin()
 
 def close_plugin():
     """This method is called when the plugin is stopped."""
