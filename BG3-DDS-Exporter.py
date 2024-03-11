@@ -68,10 +68,10 @@ def choose_texconv_folder():
     return path +"/texconv.exe"
 
 
-def convert_png_to_dds(texconvPath, sourcePNG, overwrite):
+def convert_png_to_dds(texconvPath, sourceTGA, overwrite):
     # Replace backslashes with forward slashes in the provided paths
     texconvPath = texconvPath.replace('\\', '/')
-    sourceFolder = os.path.dirname(sourcePNG)
+    sourceFolder = os.path.dirname(sourceTGA)
     sourceFolder = sourceFolder.replace('\\', '/')
     outputFolder = sourceFolder + "/DDS/"
 
@@ -82,7 +82,7 @@ def convert_png_to_dds(texconvPath, sourcePNG, overwrite):
         print("Created DDS subfolder")
 
     # for filename in os.listdir(sourceFolder):
-    filename = sourcePNG
+    filename = sourceTGA
     if filename.endswith(".tga"):
         sourceFile = os.path.splitext(filename)[0]
         suffix = sourceFile.split('_')[-1]
