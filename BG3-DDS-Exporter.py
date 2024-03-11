@@ -68,7 +68,7 @@ def choose_texconv_folder():
     return path + "/texconv.exe"
 
 
-def convert_png_to_dds(texconvPath, sourceTGA, overwrite):
+def convert_tga_to_dds(texconvPath, sourceTGA, overwrite):
     # Replace backslashes with forward slashes in the provided paths
     texconvPath = texconvPath.replace('\\', '/')
     sourceFolder = os.path.dirname(sourceTGA)
@@ -87,7 +87,7 @@ def convert_png_to_dds(texconvPath, sourceTGA, overwrite):
         suffix = sourceFile.split('_')[-1]
         suffix = suffix.rstrip('_')
 
-        outputFile = sourceFile + ".DDS"
+        outputFile = sourceFile + ".dds"
 
         if suffix in ["BM", "NM", "HMVY", "CLEA", "MSKA"]:
             format_option = "BC3_UNORM"
@@ -119,26 +119,18 @@ def convert_png_to_dds(texconvPath, sourceTGA, overwrite):
             except subprocess.CalledProcessError:
                 print(f"Failed to convert {filename}")
 
-            convert_to_DDS(outputFolder)
-            delete_tga(outputFolder)
+
+def convert_to_DDS(file):
+    path = Path(file)
+    if path.name[-3:] == "dds":
+        path.rename(path.with_suffix('.DDS'))
 
 
-def convert_to_DDS(folder):
-    export_folder = Path(folder)
-
-    for file in export_folder.iterdir():
-        path = Path(file)
-        if path.name[-3:] == "dds":
-            path.rename(path.with_suffix('.DDS'))
-
-            
-def delete_tga(folder):
-    export_folder = Path(folder)
-
-    for file in export_folder.iterdir():
-        path = Path(file)
-        if path.name[-3:] == "tga":
-            path.unlink()
+def delete_tga(file):
+    path = Path(file)
+    path = Path(file)
+    if path.name[-3:] == "tga":
+        path.unlink()
 
 
 class BG3DDSPlugin:
@@ -235,9 +227,12 @@ class BG3DDSPlugin:
             self.log.append("Converting to DDS files:")
             for file_list in res.textures.values():
                 for file_path in file_list:
-                    convert_png_to_dds(self.TexConvPath, file_path, self.overwrite)
+                    convert_tga_to_dds(self.TexConvPath, file_path, self.overwrite)
+                    convert_to_DDS(file_path[:-3] + "dds")
+                    delete_tga(file_path)
                     file_path = file_path[:-3] + "DDS"
                     self.log.append("  {}".format(file_path))
+
 
     def on_export_error(self, err):
         self.log.append("Export failed.")
