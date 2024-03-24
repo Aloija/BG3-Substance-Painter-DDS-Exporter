@@ -26,10 +26,13 @@ Move the BaldursGate3_Props.spexp and BaldursGate3_Skin.spexp to this folder:
 C:\Users\username\Documents\Adobe\Adobe Substance 3D Painter\assets\export-presets
 
 Add additional channels in Texture set settings like below:
+
 For props (horns, outfits):
+
 ![image](https://github.com/Aloija/BG3-Substance-Painter-DDS-Exporter/assets/50318910/7abfedef-a8a0-4a84-bf79-d63b1e215629)
 
 For skin: 
+
 ![image](https://github.com/Aloija/BG3-Substance-Painter-DDS-Exporter/assets/50318910/b620c377-2f6f-4997-8be0-6d0e3f9a0ec0)
 
 # Dependencies:
