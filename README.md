@@ -41,7 +41,7 @@ Microsoft Texconv (Download and extract to whatever folder you want)
 https://github.com/Microsoft/DirectXTex/wiki/Texconv
 
 # Compatibility
-Developed and tested with Substance Painter 9.1.1 (2023)
+Developed and tested with Substance Painter 10.1.0
 
 ## Support
 For support, please use this repository's GitHub Issues tracking service.
